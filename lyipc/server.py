@@ -31,7 +31,8 @@ class KlayoutServer(pya.QTcpServer):
         msg = 'null'
         while connection.isOpen() and connection.state() == pya.QTcpSocket.ConnectedState:
             if connection.canReadLine():
-                payload = connection.readLine()
+                # Avoid mixing bytes and str
+                payload = connection.readLine().decode()
                 msg = payload.rstrip('\n').rstrip('\r')
                 response = parse_message(msg)
                 connection.write(response)
